@@ -1,0 +1,102 @@
+<!-- 
+Template for IMA's Creative Coding Lab 
+
+Project A: Generative Creatures
+CCLaboratories Biodiversity Atlas 
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>[ HUMAN FLOWER ]</title>
+
+    <!-- allow special characters, including Arabic, Chinese, Korean, Japanese, etc. -->
+    <meta charset="UTF-8">
+    <!-- link the style sheet -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- import p5.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+    <script>
+        // prevent scrolling when spacebar and arrow keys are pressed.
+        window.addEventListener("keydown", function (e) { if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } }, false);
+    </script>
+</head>
+
+<body>
+    <!-- title -->
+    <div id="title-wrapper">
+        <h1 class="headline black">[ HUMAN FLOWER ]</h1>
+    </div>
+
+    <!-- main content -->
+    <div id="main-wrapper">
+        <div id="p5-canvas-container">
+            <!-- This is where your p5 sketch will be appended and appear! -->
+        </div>
+        <div class="two-columns">
+            <div class="left">
+                <h3 class="red">Scientific Name:</h3>
+                <p>Rafflesia glorie</p>
+
+                <h3 class="red">Discovered by / at:</h3>
+                <p>Aubrey DeRobertis, 06-2020</p>
+
+                <h3 class="green">Family:</h3>
+                <p>Rafflesiaceae, Rafflesia genus — the "Human Flower" is a unique species among the variety of Rafflesia flowers, boasting features asimilar to its flowers of the same family. It does not contain multiple white spores across its surface; instead, when in full bloom, the entire flower turns a green-ish/blue-ish. Circumstances as to why these colors appear amidst bloom is unknown.</p>
+            </div>
+            <div class="right">
+                <h3 class="green">Habitat:</h3>
+                <p>This variety was specifically discovered in the Malay Peninsula of Thailand; it shares a similar habitat to other species within its family, inhabiting rainforest floors.</p>
+
+                <h3 class="green">Appearance:</h3>
+                <p>The "Human Flower" is reminiscient of the other Rafflesia flowers, large in length and width, lacking the spores of other flowers within the Rafflesiaceae family. Unlike the other Rafflesia flowers, the Rafflesia glorie is quick to react to human interaction, and much more sensitive to touch than other Rafflesia flowers. Instructions on ideal interaction with this species is detailed below.</p>
+
+                <h3 class="green">Key Characteristics:</h3>
+                <ul>
+                    <li>Human-like consciousness</li>
+                    <li>3-4ft (90-120cm) in size</li>
+                    <li>No stems, leaves, or roots</li>
+                    <li>Quick to react to human interaction</li>
+                    <li>Large leaves bordering the flower</li>
+                </ul>
+            </div>
+        </div>
+        <div class="one-column">
+            <p>
+                <span class="yellow">What we know so far about [ HUMAN FLOWER ]?</span>
+                The Rafflesia glorie ("Human Flower") is a rare, parasitic plant found in the tropical forests of east
+                and southeast Asia (in 2020), lacking stems, roots, and any photosynthetic tissue. The Human Flower is
+                iconically recognized by researchers as the only flower in the world to possess a "human-like consciousness,"
+                with the ability to use two of five human senses (smell and hearing). In 2025, further discoveries
+                found that the Human Flower may also be able to react to touch, and have advised careful interaction to
+                scientists encountering the flower in the wild, as to not harm it.
+                <br><br>
+                <span class="yellow">Guidelines for human interaction with this creature:</span> The Human Flower is
+                especially sensitive to touch. Being too harsh and hasty with the flower will cause it to quickly wither
+                and die — limited interaction with the flower is allowed, for this reason. However, researchers have also
+                found that gentle touch to the flower can induce positive results, with the Human Flower capable of blooming
+                within seconds.
+                <br><br>
+                Additionally, the Human Flower is sensitive to smell and hearing. It is not known to grow beside other flowers
+                of the Rafflesia genus due to their corpse-like scent, and is also known to wither away at unpleasant, sudden
+                noises.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer" class="black">
+        <p>A CCLab project made by Aubrey DeRobertis in Summer 2025</p>
+    </div>
+
+    <!-- Home: Link back to the ATLAS page-->
+    <div id="home">
+        <a href="https://cclab.work/atlas">Back to the ATLAS</a>
+    </div>
+
+    <!-- Include your sketch.js file here -->
+    <script src="sketch.js" type="text/javascript"> </script>
+</body>
+
+</html>
