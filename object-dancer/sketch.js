@@ -233,8 +233,8 @@ class AubreyDancer {
 
     // CHANGE ARM SPEED
     this.armSpeed += 5;
-    if (this.armSpeed >= 20) {
-      this.armSpeed = 20;
+    if (this.armSpeed >= 50) {
+      this.armSpeed = 50;
     }
 
   }
