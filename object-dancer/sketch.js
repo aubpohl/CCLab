@@ -12,6 +12,10 @@
 
 let dancer;
 
+let NUM_OF_PARTICLES = 50; // Decide the initial number of particles.
+
+let particles = [];
+
 function setup() {
   // no adjustments in the setup function needed...
   let canvas = createCanvas(windowWidth, windowHeight);
@@ -19,6 +23,11 @@ function setup() {
 
   // ...except to adjust the dancer's name on the next line:
   dancer = new AubreyDancer(width / 2, height / 2);
+
+  // generate particles
+  for (let i = 0; i < NUM_OF_PARTICLES; i++) {
+    particles[i] = new Particle(random(width), random(height));
+  }
 }
 
 function draw() {
@@ -28,6 +37,68 @@ function draw() {
 
   dancer.update();
   dancer.display();
+
+   // update and display
+  for (let i = 0; i < particles.length; i++) {
+    let p = particles[i];
+    p.update();
+    p.display();
+    p.checkOnScreen();
+    } 
+
+  for(let i = particles.length-1; i >= 0; i--){
+    if (particles[i].onScreen == false) {
+      particles.splice(i, 1);
+    }
+  }
+}
+
+class Particle {
+  // constructor function
+  constructor(startX, startY) {
+    // properties (variables): particle's characteristics
+    this.x = startX;
+    this.y = startY;
+    this.dia = random(5, 40);
+    this.yParticleSpeed = random(-1, -5);
+    this.noiseArcGoal = random(50, 80);
+    this.sinRandomValue = random(-100, 100)
+
+    this.onScreen = true;
+  
+  }
+  // methods (functions): particle's behaviors
+  update() {
+    // (add)
+    this.y += this.yParticleSpeed;
+    this.sinValue = sin(frameCount*0.01) * this.sinRandomValue;
+
+    console.log(this.y);
+  }
+  display() {
+    // particle's appearance
+    push();
+    translate(this.x+this.sinValue, this.y);
+
+    // BUBBLE SHAPE
+    strokeWeight(1);
+    stroke(255);
+    fill(179, 232, 255, 75);
+    circle(0,0, this.dia);
+
+    // INSIDE OF BUBBLE
+    strokeWeight(random(1, 3));
+    strokeCap(ROUND);
+    fill(0, 0, 0, 0);
+    arc(0, 0, this.dia-10, this.dia-10, 0, this.noiseArcGoal, OPEN);
+
+    pop();
+  }
+  checkOnScreen() {
+    if (this.y < -20) {
+      this.onScreen = false;
+    }
+  }
 }
 
 // You only code inside this class.
@@ -203,6 +274,7 @@ class AubreyDancer {
         fill(247, 193, 77);
         rect(-25, -28, 70, 10);
       pop();
+      pop();
 
       ////////////////////
       ////////////////////
@@ -281,7 +353,13 @@ Here are the key events that your dancer should react to in some way.
 function keyPressed(){
   if(key == "a"){
     dancer.triggerA()
+
   }else if(key == "d"){
     dancer.triggerD()
+  } else if(key == "p"){
+    // ADDS MORE BUBBLES!!!
+    for (let i = 0; i < NUM_OF_PARTICLES; i++) {
+      particles.push(new Particle(random(width), height));
+    }
   }
 }
