@@ -110,9 +110,16 @@ class Particle {
 
     let d = dist(mouseX, mouseY, this.x+this.sinValue, this.y);
 
+    let leftHandX = dancer.x+ (-66+dancer.maracaOffset - 3)*dancer.scale
+    let rightHandX = dancer.x+ (66+dancer.maracaOffset - 3)*dancer.scale
+    let leftHandY = dancer.y + (8 + -5 + dancer.yArmOffset -12+dancer.maracaOffset - 3)*dancer.scale
+
+    let d1 = dist(rightHandX, leftHandY, this.x+this.sinValue, this.y);
+    let d2 = dist(leftHandX, leftHandY, this.x+this.sinValue, this.y);
+
     let popDistance = this.dia/2;
 
-    if (d < popDistance) {
+    if (d < popDistance || d2 < popDistance || d1 < popDistance) {
 
       this.onScreen = false;
       bubble.play();
@@ -319,6 +326,8 @@ class AubreyDancer {
     // is a part if your Dancer object.
     // comment it out or delete it eventually.
     this.drawReferenceShapes()
+
+   
 
     pop();
   }
