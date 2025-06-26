@@ -16,6 +16,12 @@ let NUM_OF_PARTICLES = 50; // Decide the initial number of particles.
 
 let particles = [];
 
+let bubble;
+
+function preload() {
+  bubble = loadSound("pop.mp3");
+}
+
 function setup() {
   // no adjustments in the setup function needed...
   let canvas = createCanvas(windowWidth, windowHeight);
@@ -63,7 +69,7 @@ class Particle {
     this.yParticleSpeed = random(-1, -5);
     this.noiseArcGoal = random(50, 80);
     this.sinRandomValue = random(-100, 100)
-
+    this.rotateAngle = 1;
     this.onScreen = true;
   
   }
@@ -74,11 +80,14 @@ class Particle {
     this.sinValue = sin(frameCount*0.01) * this.sinRandomValue;
 
     console.log(this.y);
+
+    this.rotateAngle++;
   }
   display() {
     // particle's appearance
     push();
     translate(this.x+this.sinValue, this.y);
+    rotate(this.rotateAngle*0.2);
 
     // BUBBLE SHAPE
     strokeWeight(1);
@@ -97,6 +106,17 @@ class Particle {
   checkOnScreen() {
     if (this.y < -20) {
       this.onScreen = false;
+    }
+
+    let d = dist(mouseX, mouseY, this.x+this.sinValue, this.y);
+
+    let popDistance = this.dia/2;
+
+    if (d < popDistance) {
+
+      this.onScreen = false;
+      bubble.play();
+
     }
   }
 }
@@ -118,6 +138,8 @@ class AubreyDancer {
 
     this.scale = 1;
     this.scaleGoal = this.scale;
+
+    this.headMultiplier = 1;
   }
   update() {
     // update properties here to achieve
@@ -171,6 +193,7 @@ class AubreyDancer {
 
       // TAIL
       push();
+      noStroke();
       translate(35+this.yOffset, 55+this.yOffset);
       ellipse(0, 0, 25, 15);
       pop();
@@ -242,7 +265,7 @@ class AubreyDancer {
 
       push();
       translate(0, 0+this.yOffset);
-      rotate(this.headOffset);
+      rotate(this.headOffset*this.headMultiplier);
         // EARS
         strokeWeight(1)
         stroke(0);
@@ -304,10 +327,9 @@ class AubreyDancer {
     // your dancer should perform some kind of reaction (i.e. make a special move or gesture) 
 
     // CHANGE ARM SPEED
-    this.armSpeed += 5;
-    if (this.armSpeed >= 50) {
-      this.armSpeed = 50;
-    }
+    this.armSpeed += 50;
+
+    this.headMultiplier += 1.05;
 
   }
   triggerD(){
