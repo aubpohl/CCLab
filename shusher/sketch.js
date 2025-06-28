@@ -135,6 +135,7 @@ function draw() {
     // CONSTRAIN 0-1032 VOLUME TO 0-50
     // & THEN MAP IT TO VALUES FROM 0.0 - 1.0 FOR VOLUME
     s = map(val[1], 0, 50, 0, 1.0);
+    console.log(val);
 
     // IF BUTTON IS TURNED ON, SHOW PROGRAM
     if (val[0] == 0) {
