@@ -18,6 +18,11 @@ let particles = [];
 
 let bubble;
 
+let port;
+let connectBtn;
+let str; //string from arduino
+let val; // array with sensor values
+
 function preload() {
   bubble = loadSound("pop.mp3");
 }
@@ -34,11 +39,55 @@ function setup() {
   for (let i = 0; i < NUM_OF_PARTICLES; i++) {
     particles[i] = new Particle(random(width), random(height));
   }
+
+  port = createSerial();
+
+  // in setup, we can open ports we have used previously
+  // without user interaction
+  let usedPorts = usedSerialPorts();
+  if (usedPorts.length > 0) {
+    port.open(usedPorts[0], 57600);
+  }
+
+  // any other ports can be opened via a dialog after
+  // user interaction (see connectBtnClick below)
+  connectBtn = createButton("Connect to Arduino");
+  connectBtn.position(20, 370);
+  connectBtn.mousePressed(connectBtnClick);
 }
 
 function draw() {
   // you don't need to make any adjustments inside the draw loop
   background(0);
+
+  str = port.readUntil("\n");
+  //str = trim(str); //remove any empty space
+
+  if (str.length > 0) {
+    val = int(str.split(",")); //split the values if there is a comma in between and convert them into numbers
+
+    // you receive three values from arduino that are stored
+    // in the array called val
+    // the first value is a range, see it like this
+    fill(255)
+    text(val[0], 20, 20)
+    // the second and third value are either 0 or 1 and will most likely
+    // trigger your dancer's two special motions
+  
+    if (val[0] == 1) {
+      // trigger your particles, you will have to adjust the threshold in the if statements
+       dancer.triggerD()
+
+    }
+    if (val[1] == 1) {
+      dancer.triggerA() 
+    }
+    if (val[2] > 250) {
+      dancer.triggerP()
+    }
+  }
+
+
   drawFloor(); // for reference only
 
   dancer.update();
@@ -57,6 +106,7 @@ function draw() {
       particles.splice(i, 1);
     }
   }
+
 }
 
 class Particle {
@@ -348,6 +398,11 @@ class AubreyDancer {
     this.scaleGoal = random(0.5, 1.5);
 
   }
+  triggerP(){
+        for (let i = 0; i < NUM_OF_PARTICLES; i++) {
+      particles.push(new Particle(random(width), height));
+    }
+  }
   drawReferenceShapes() {
     noFill();
     stroke(255, 0, 0);
@@ -389,8 +444,16 @@ function keyPressed(){
     dancer.triggerD()
   } else if(key == "p"){
     // ADDS MORE BUBBLES!!!
-    for (let i = 0; i < NUM_OF_PARTICLES; i++) {
-      particles.push(new Particle(random(width), height));
-    }
+
+    dancer.triggerP()
+
+  }
+}
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open("Arduino", 57600);
+  } else {
+    port.close();
   }
 }
