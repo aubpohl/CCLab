@@ -8,19 +8,26 @@ let connectBtn;
 let str;
 let val; 
 
+// CHANGE IMAGE INDEX BASED OFF OF WHERE MOUSE PRESSES (FOR PARTICLES)
+let n = 0;
+
+// PARTICLES 
+let particles = [];
+let numParticles = 1;
+
 // CREATE EMPTY ARRAY & LOOP OVER IT WITH SOUND NAMES
 let sounds = [];
 
 // ARRAY OF NAMES FOR SOUNDS
 let soundNames = ["meow", "woof", "quack", "fart", "bruh", "moo", "cricket",
   "horse", "snore", "vineboom", "amongus", "squeaky", "monkey", "eagle",
-  "trombone", "tacobell", "oink", "revving", "windows", "fettywap"]
+  "trombone", "tacobell", "oink", "revving", "windows", "fettywap", "soda"]
 
 // CREATE EMPTY ARRAY & LOOP OVER IT WITH IMAGE NAMES
 let images = [];
 
 // ARRAY OF NAMES FOR IMAGES
-let imageNames = ["icon-cat", "icon-dog", "icon-duck", "icon-fart"]
+let imageNames = ["icon-star", "icon-cat", "icon-dog", "icon-duck", "icon-fart"]
 
 // BY DEFAULT, DO NOT SHOW THE MENU
 let showProgram = false;
@@ -40,6 +47,7 @@ let fartTrue = 1;
 
 // LOAD SOUNDS + IMAGES + FONTS
 function preload() {
+
   // FOR LOOP, SO THAT I DON'T HAVE TO LOAD 20-ISH SOUNDS....
   for (n = 0; n < soundNames.length; n++) {
   sounds.push(loadSound("assets/"+soundNames[n]+".mp3"))
@@ -90,31 +98,56 @@ function draw() {
   // IF SHOWPROGRAM HAS BEEN TURNED TO TRUE (BY BUTTON), DISPLAY PROGRAM
   if (showProgram == true) {
     program.display();
+    
+    // IF MOUSE IS PRESSED, CREATE PARTICLES!!
+    if (mouseIsPressed == true) {
+      for (i = 0; i < numParticles; i++) {
+      particles.push(new Particle(mouseX, mouseY));
+    }
+    }
+
+    // LOOPS OVER ARRAY FOR THE 3 FUNCTIONS
+    for(let i = 0; i < particles.length; i++){
+      particles[i].update();
+      particles[i].display();
+      particles[i].checkOnScreen();
+    }
+
+  // CONSTRAIN ARRAY TO 250 PARTICLES MAX
+  while(particles.length > 250) {
+    particles.splice(0, 1);
+  }
+  
+  // LOOP OVER ARRAY & REMOVE PARTICLES NOT ON SCREEN
+  for(let i = particles.length-1; i >= 0; i--){
+    if (particles[i].onScreen == false) {
+      particles.splice(i, 1);
+    }
+  }
   }
   
   // ARDUINO STUFF
   str = port.readUntil("\n");
 
   if (str.length > 0) {
-    val = int(str.split(",")); //split the values if there is a comma in between and convert them into numbers
+    val = int(str.split(","));
 
     // CONSTRAIN 0-1032 VOLUME TO 0-50
     // & THEN MAP IT TO VALUES FROM 0.0 - 1.0 FOR VOLUME
     s = map(val[1], 0, 50, 0, 1.0);
-    console.log(val);
 
     // IF BUTTON IS TURNED ON, SHOW PROGRAM
-    if (val[0] == 1) {
-      console.log("on")
+    if (val[0] == 0) {
+      // console.log("on")
       showProgram = true;
       
     // ELSE IF BUTTON IS OFF, TURN OFF PROGRAM
-    } else if (val[0] == 0) {
+    } else if (val[0] == 1) {
       showProgram = false;
     }
 
     // IF THE VOLUME THRESHOLD HAS BEEN MET & PROGRAM IS RUNNING, PLAY CURRENT SOUND
-    if (val[1] > 5 && showProgram == true) {
+    if (val[1] > 15 && showProgram == true) {
       diffsound.play();
     }
 
@@ -122,13 +155,8 @@ function draw() {
     // HOLDING BUTTON WILL PLAY MANY MANY RANDOM SOUNDS IN SUCCESSION
     // BUT PRESSING IT ONCE WILL PICK A RANDOM SOUND FROM THE ARRAY
     // & KEEP IT THAT WAY :-)
-    if (val[2] == 1) {
+    if (val[2] == 0) {
       diffsound.randomize();
-
-          // fill(0);
-          // textSize(32);
-          // textFont(font);
-          // text("random mode ACTIVATED!!!!", 290, 870);
     }
 }
 }
@@ -145,7 +173,7 @@ class Program {
   click(x, y) {
   // VALUES FOR BUTTON LOCATIONS
   let w = 200;
-  let h = 200;
+  let h = 250;
   let gap = 20;
 
   let startX = 290;
@@ -161,6 +189,7 @@ class Program {
       duckTrue = 1;
       fartTrue = 1;
       dogTrue = 1;
+      n = 1;
     }
 
     // DOG BUTTON
@@ -170,7 +199,7 @@ class Program {
       duckTrue = 1;
       fartTrue = 1;
       catTrue = 1;
-
+      n = 2;
     }
 
     // DUCK BUTTON
@@ -180,6 +209,7 @@ class Program {
       catTrue = 1;
       dogTrue = 1;
       fartTrue = 1;
+      n = 3;
     }
 
     // FART BUTTON
@@ -189,6 +219,9 @@ class Program {
       catTrue = 1;
       dogTrue = 1;
       duckTrue = 1;
+      n = 4;
+        } else {
+      n = 0;
     }
   }
 }
@@ -210,28 +243,27 @@ class Program {
     let startX = width/2 - w - gap/2;
     let startY = height/2 - h - gap/2;
 
-
     strokeWeight(catTrue);
     fill("white");
     rect(startX, startY, w, h, 40);
     textSize(48);
     textFont("Courier New");
-    image(images[0], startX + 75, startY + 80);
+    image(images[1], startX + 75, startY + 80);
 
     strokeWeight(dogTrue);
     fill("white");
     rect(startX + w + gap, startY, w, h, 40);
-    image(images[1], startX + w + gap + 75, startY + 80);
+    image(images[2], startX + w + gap + 75, startY + 80);
 
     strokeWeight(duckTrue);
     fill("white");
     rect(startX, startY + h + gap, w, h, 40);
-    image(images[2], startX + 75, startY + h + gap + 80);
+    image(images[3], startX + 75, startY + h + gap + 80);
 
     strokeWeight(fartTrue);
     fill("white");
     rect(startX + w + gap, startY + h + gap, w, h, 40);
-    image(images[3], startX + w + gap + 75, startY + h + gap + 80);
+    image(images[4], startX + w + gap + 75, startY + h + gap + 80);
 
     fill(0);
     textSize(32);
@@ -241,13 +273,14 @@ class Program {
     text("to turn device off: gesture against your middle finger", 300, 280);
     text("for a surprise: gesture against your ring finger", 300, 300)
 
-    if (val[2] == 1) {
+    if (val[2] == 0) {
       fill(0);
       textSize(32);
       textFont(font);
       text("random mode ACTIVATED!!!!", 285, 870);
     }
   }
+
 
 }
 
@@ -284,6 +317,44 @@ class Speaker {
       }
     }
   } 
+}
+
+class Particle {
+  constructor(startX, startY) {
+    this.x = startX;
+    this.y = startY;
+    this.size = random(0, 1);    
+    this.speedX = random(-2, 2);
+    this.speedY = random(-1, -3); 
+    
+    this.onScreen = true;
+  }
+  // ANIMATION
+  update() {
+    this.x+=this.speedX;
+    this.speedX *= 0.99
+
+
+    this.y+=this.speedY;
+    this.speedY += 0.1;
+  }
+
+  // DISPLAY PARTICLES
+  display() {    
+    push();
+    translate(this.x, this.y);
+    scale(this.size)
+    image(images[n], 0, 0); 
+    pop();
+  }
+
+  // CHECK IF PARTICLES ARE ON THE SCREEN 
+  checkOnScreen() {
+    if (this.y > height+10) {
+      this.onScreen = false;
+    }
+  }
+
 }
 
 // FUNCTION TO INTERACT WITH MENU BUTTONS
